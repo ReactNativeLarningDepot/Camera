@@ -1,26 +1,28 @@
-import { useState } from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import {
+  AuthSessionResult,
   exchangeCodeAsync,
   makeRedirectUri,
+  TokenResponse,
   useAuthRequest,
   useAutoDiscovery,
 } from 'expo-auth-session';
-import { Button, Text, SafeAreaView } from 'react-native';
+import {Alert, Button, SafeAreaView} from 'react-native';
+import {getMe, UserResponse} from "../../clients/user-client";
 
 
-WebBrowser.maybeCompleteAuthSession();
+WebBrowser.maybeCompleteAuthSession()
 
-const TENANT_ID = "b96130b7-e3bf-4026-ab41-4088ef571d95";
-const CLIENT_ID = "cb29686b-b367-4718-b140-482831208a0a";
+
 
 export default function LogIn() {
+  const tenant_id = "b96130b7-e3bf-4026-ab41-4088ef571d95"
+  const clientId = "cb29686b-b367-4718-b140-482831208a0a"
+  const redirectUri = makeRedirectUri()
   const discovery = useAutoDiscovery(
-    `https://login.microsoftonline.com/${TENANT_ID}/v2.0`,
-  );
-  const redirectUri = makeRedirectUri();
-  const clientId = CLIENT_ID;
-  const [token, setToken] = useState<string | null>(null);
+    `https://login.microsoftonline.com/${tenant_id}/v2.0`,
+  )
+
   const [request, , promptAsync] = useAuthRequest(
     {
       clientId,
@@ -28,27 +30,40 @@ export default function LogIn() {
       redirectUri: redirectUri,
     },
     discovery,
-  );
+  )
 
-  const handleOnPressLogInButton = () => {
-    promptAsync().then((codeResponse) => {
-      if (request && codeResponse?.type === 'success' && discovery) {
-        exchangeCodeAsync(
-          {
-            clientId,
-            code: codeResponse.params.code,
-            extraParams: request.codeVerifier
-              ? { code_verifier: request.codeVerifier }
-              : undefined,
-            redirectUri: redirectUri,
-          },
-          discovery,
-        ).then((res) => {
-          setToken(res.accessToken);
-          console.log(res.accessToken)
-        });
+  const handleOnPressLogInButton = async () => {
+    const codeResponse: AuthSessionResult = await promptAsync()
+
+    if (request && codeResponse?.type === 'success' && discovery) {
+      const idToken: string | undefined = await exChangeCodeToIdToken(codeResponse)
+      if (idToken) {
+        const userResponse: UserResponse = await getMe(idToken)
+        console.log('========================================')
+        console.log(userResponse.name)
+        console.log(userResponse.accessToken)
+        console.log('========================================')
+      } else {
+        Alert.alert("idトークンが取得できませんでした")
       }
-    });
+    }
+  }
+
+  const exChangeCodeToIdToken = async (codeResponse: AuthSessionResult): Promise<string | undefined> => {
+    if (!(request && codeResponse?.type === 'success' && discovery)) return undefined
+
+    const res: TokenResponse =  await exchangeCodeAsync(
+      {
+        clientId,
+        code: codeResponse.params.code,
+        extraParams: request.codeVerifier
+          ? { code_verifier: request.codeVerifier }
+          : undefined,
+        redirectUri: redirectUri,
+      },
+      discovery,
+    )
+    return res.idToken
   }
 
   return (
@@ -58,7 +73,7 @@ export default function LogIn() {
         title="Login"
         onPress={handleOnPressLogInButton}
       />
-      <Text>{token}</Text>
+      {/*<Text>{idToken}</Text>*/}
     </SafeAreaView>
-  );
+  )
 }
