@@ -26,7 +26,7 @@ export default function LogIn() {
   const [request, , promptAsync] = useAuthRequest(
     {
       clientId,
-      scopes: ['openid', 'profile', 'email', 'offline_access'],
+      scopes: ['openid', 'profile', 'email'],
       redirectUri: redirectUri,
     },
     discovery,
