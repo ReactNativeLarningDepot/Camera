@@ -8,12 +8,13 @@ import {
   useAutoDiscovery,
 } from 'expo-auth-session';
 import {Alert, Button, SafeAreaView} from 'react-native';
-import {getMe, UserResponse} from "../../clients/user-client";
+import {getMe} from "../../clients/user-client";
+import {User} from "../models/User";
+import {GetUserResponse} from "../api/request/GetUserResponse";
+import {useUserContext} from "../UserContext";
 
 
 WebBrowser.maybeCompleteAuthSession()
-
-
 
 export default function LogIn() {
   const tenant_id = "b96130b7-e3bf-4026-ab41-4088ef571d95"
@@ -32,19 +33,24 @@ export default function LogIn() {
     discovery,
   )
 
+  const { setUser } = useUserContext()
+
   const handleOnPressLogInButton = async () => {
     const codeResponse: AuthSessionResult = await promptAsync()
 
     if (request && codeResponse?.type === 'success' && discovery) {
       const idToken: string | undefined = await exChangeCodeToIdToken(codeResponse)
+
       if (idToken) {
-        const userResponse: UserResponse = await getMe(idToken)
-        console.log('========================================')
-        console.log(userResponse.name)
-        console.log(userResponse.accessToken)
-        console.log('========================================')
+        const userResponse: GetUserResponse = await getMe(idToken)
+        const user: User = {
+          id: userResponse.id,
+          name: userResponse.name,
+          accessToken: userResponse.accessToken
+        }
+        setUser(user)
       } else {
-        Alert.alert("idトークンが取得できませんでした")
+        Alert.alert("アクセストークンが取得できませんでした")
       }
     }
   }
@@ -73,7 +79,6 @@ export default function LogIn() {
         title="Login"
         onPress={handleOnPressLogInButton}
       />
-      {/*<Text>{idToken}</Text>*/}
     </SafeAreaView>
   )
 }

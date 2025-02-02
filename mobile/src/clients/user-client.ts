@@ -1,7 +1,8 @@
 import {baseClient} from "./base-client";
+import {GetUserResponse} from "../app/api/request/GetUserResponse";
 
 export const getMe = async (idToken: string) => {
-  const { data } = await baseClient.post<UserResponse>(
+  const { data } = await baseClient.post<GetUserResponse>(
     '/auth/api/users/me',
     {},
     { headers: { Authorization: `Bearer ${idToken}`} }
@@ -9,8 +10,3 @@ export const getMe = async (idToken: string) => {
   return data
 }
 
-export type UserResponse = {
-  id: number,
-  name: string,
-  accessToken: string
-}

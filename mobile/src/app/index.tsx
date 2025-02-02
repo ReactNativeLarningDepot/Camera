@@ -1,7 +1,21 @@
-import {Redirect} from "expo-router";
+import UserProvider from "./UserProvider";
+import LogIn from "./screens/LogIn";
+import Authorized from "./Authorized";
+import Main from "./screens/Main";
+import UnAuthorized from "./UnAuthorized";
 
 const Index = () => {
-  return <Redirect href='auth/LogIn'></Redirect>
+  return (
+    <UserProvider>
+      <Authorized>
+        <Main/>
+      </Authorized>
+
+      <UnAuthorized>
+        <LogIn />
+      </UnAuthorized>
+    </UserProvider>
+  )
 }
 
 export default Index
