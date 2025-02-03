@@ -1,8 +1,8 @@
 package com.minspo.server.auth.filter
 
 import com.minspo.server.auth.domain.model.RungramAuthenticationToken
-import com.minspo.server.auth.domain.model.RungramPrincipal
-import com.minspo.server.auth.domain.model.RungramRole
+import com.minspo.server.auth.domain.model.OriginalPrincipal
+import com.minspo.server.auth.domain.model.UserRole
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -18,10 +18,10 @@ class ConvertPrincipalFilter: OncePerRequestFilter() {
     val name = principal.getClaimAsString("name")
     val email = principal.getClaimAsString("preferred_username")
 
-    val authorities = listOf(SimpleGrantedAuthority(RungramRole.ROLE_MEMBER.name))
+    val authorities = listOf(SimpleGrantedAuthority(UserRole.ROLE_MEMBER.name))
     createNewContext(
       RungramAuthenticationToken(
-        RungramPrincipal(
+        OriginalPrincipal(
           id = 0L,
           oid = oid,
           name = name,

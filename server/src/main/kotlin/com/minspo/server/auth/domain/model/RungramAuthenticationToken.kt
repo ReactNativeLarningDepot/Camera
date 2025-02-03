@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 
 data class RungramAuthenticationToken(
-  private val principal: RungramPrincipal,
+  private val principal: OriginalPrincipal,
   private val credentials: String,
   private val authorities: MutableList<GrantedAuthority>
 ): Authentication {
@@ -24,5 +24,29 @@ data class RungramAuthenticationToken(
 
   override fun setAuthenticated(isAuthenticated: Boolean) {
     this.isAuthenticated = isAuthenticated
+  }
+
+  companion object {
+    fun createToken(credentials: String): RungramAuthenticationToken {
+      return RungramAuthenticationToken(
+        OriginalPrincipal(),
+        credentials,
+        mutableListOf()
+      )
+    }
+
+    fun createAuthenticatedToken(
+      principal: OriginalPrincipal,
+      credentials: String,
+    ): RungramAuthenticationToken {
+      val token =
+        RungramAuthenticationToken(
+          principal,
+          credentials,
+          principal.authorities.toMutableList(),
+        )
+      token.isAuthenticated = true
+      return token
+    }
   }
 }

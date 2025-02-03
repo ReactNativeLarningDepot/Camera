@@ -1,6 +1,6 @@
 package com.minspo.server.auth.coder
 
-import com.minspo.server.auth.domain.model.RungramPrincipal
+import com.minspo.server.auth.domain.model.OriginalPrincipal
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class RungramJwtEncoder(
+class OriginalJwtEncoder(
     @Value("\${app.jwt.secret}")
     private val secret: String,
     @Value("\${app.jwt.expiration-time}")
@@ -17,8 +17,8 @@ class RungramJwtEncoder(
     private val key = Keys.hmacShaKeyFor(secret.toByteArray())
 
     fun encode(
-        id: Long,
-        principal: RungramPrincipal,
+      id: Long,
+      principal: OriginalPrincipal,
     ): String {
         val copiedPrincipal = principal.newInstanceWith(id)
 

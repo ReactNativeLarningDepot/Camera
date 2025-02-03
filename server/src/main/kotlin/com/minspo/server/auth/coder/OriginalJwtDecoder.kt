@@ -1,6 +1,6 @@
-package com.example.backend.auth.coder
+package com.minspo.server.auth.coder
 
-import com.minspo.server.auth.domain.model.RungramPrincipal
+import com.minspo.server.auth.domain.model.OriginalPrincipal
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
 
 @Component
-class RungramJwtDecoder(
+class OriginalJwtDecoder(
     @Value("\${app.jwt.secret}")
     private val secret: String,
 ) {
@@ -17,7 +17,7 @@ class RungramJwtDecoder(
 
     @Throws(JwtException::class, IllegalArgumentException::class)
     @Suppress("UNCHECKED_CAST")
-    fun decode(accessToken: String): RungramPrincipal {
+    fun decode(accessToken: String): OriginalPrincipal {
         val result =
             Jwts.parser()
                 .verifyWith(key)
@@ -25,7 +25,7 @@ class RungramJwtDecoder(
                 .parseSignedClaims(accessToken)
         val principal = result.payload[PRINCIPAL_KEY] as Map<*, *>
         val authorities = principal["authorities"] as List<Map<*, *>>
-        return RungramPrincipal(
+        return OriginalPrincipal(
             principal["id"].toString().toLong(),
             principal["oid"].toString(),
             principal["name"].toString(),

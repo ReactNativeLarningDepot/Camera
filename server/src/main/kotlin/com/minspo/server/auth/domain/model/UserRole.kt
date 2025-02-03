@@ -1,6 +1,6 @@
 package com.minspo.server.auth.domain.model
 
-enum class RungramRole {
+enum class UserRole {
   ROLE_HEAD_COACH,
   ROLE_MANAGER,
   ROLE_CAPTAIN,
