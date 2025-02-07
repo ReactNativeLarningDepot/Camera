@@ -1,21 +1,8 @@
-import UserProvider from "./UserProvider";
-import LogIn from "./screens/LogIn";
-import Authorized from "./Authorized";
 import Main from "./screens/Main";
-import UnAuthorized from "./UnAuthorized";
+import {router} from "expo-router";
 
 const Index = () => {
-  return (
-    <UserProvider>
-      <Authorized>
-        <Main/>
-      </Authorized>
-
-      <UnAuthorized>
-        <LogIn />
-      </UnAuthorized>
-    </UserProvider>
-  )
+  return <Main/>
 }
 
 export default Index

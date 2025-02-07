@@ -1,4 +1,4 @@
-package com.minspo.server.provider
+package com.minspo.server.auth.provider
 
 import com.minspo.server.auth.coder.OriginalJwtDecoder
 import com.minspo.server.auth.domain.model.RungramAuthenticationToken

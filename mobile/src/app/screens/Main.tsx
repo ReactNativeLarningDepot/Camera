@@ -1,7 +1,8 @@
-import {View, Text} from "react-native";
+import {View, Text, TouchableOpacity} from "react-native";
 import {useUserContext} from "../UserContext";
 import {useEffect, useState} from "react";
 import {getHoge, GetHogeResponse} from "../../clients/hoge-client";
+import {router} from "expo-router";
 
 const Main = () => {
   const {user} = useUserContext()
@@ -20,6 +21,9 @@ const Main = () => {
     <View>
       <Text>{user?.name}さん、ようこそ！</Text>
       <Text>{hoge}</Text>
+      <TouchableOpacity onPress={() => router.push('/screens/Main2')}>
+        <Text>Main2へ</Text>
+      </TouchableOpacity>
     </View>
   )
 }

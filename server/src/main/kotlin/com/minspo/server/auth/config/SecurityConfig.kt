@@ -4,7 +4,7 @@ import com.minspo.server.auth.coder.OriginalJwtDecoder
 import com.minspo.server.auth.filter.ConvertPrincipalFilter
 import com.minspo.server.auth.filter.OriginalJwtAuthenticationFilter
 import com.minspo.server.auth.service.UserService
-import com.minspo.server.provider.RungramJwtAuthProvider
+import com.minspo.server.auth.provider.RungramJwtAuthProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
