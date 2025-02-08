@@ -1,8 +1,7 @@
-import Main from "./screens/Main";
-import {router} from "expo-router";
+import SamplePage from "./sample/SamplePage";
 
 const Index = () => {
-  return <Main/>
+  return <SamplePage/>
 }
 
 export default Index
